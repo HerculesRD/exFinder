@@ -1,5 +1,12 @@
 #!/bin/bash
 
+usage(){
+    echo "usage: "
+    echo -e "\t ./exfinder.sh [string_search]"
+}
+
+if [[ $# -eq 0 || $1 == '-h' || $1 == '-help' || $# -gt 1 ]]; then usage; exit; fi
+
 string="$(curl https://www.exploitalert.com/api/search-exploit?name={$1} --silent | sed "s/},/\n/g" | tr -d "{[]\"" | tr "," "\t" | awk '{$2=""; print $0}' | sed "s/$/}/g" | tr -d "\n")"
 IFS=$'}' read -r -a array <<< "$string"
 declare -a menu=("${array[@]}")
